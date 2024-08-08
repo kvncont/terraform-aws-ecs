@@ -9,8 +9,14 @@
 		"vscode": {
 			"extensions": [
 				"hashicorp.terraform",
-				"GitHub.copilot"
-			]
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				"ms-vscode.vscode-speech",
+				"ms-vscode.vscode-speech-language-pack-es-mx"
+			],
+			"settings": {
+				"accessibility.voice.speechLanguage": "es-MX"
+			}
 		}
 	},
 	"mounts": [
