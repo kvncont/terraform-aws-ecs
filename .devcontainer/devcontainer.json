@@ -3,7 +3,10 @@
 	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 	"features": {
 		"ghcr.io/devcontainers/features/terraform:1": {},
-		"ghcr.io/devcontainers-contrib/features/terraform-docs:1": {}
+		"ghcr.io/devcontainers-contrib/features/terraform-docs:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		// "ghcr.io/devcontainers/features/java:1": {},
+		// "ghcr.io/devcontainers/features/python:1": {}
 	},
 	"customizations": {
 		"vscode": {
@@ -15,12 +18,16 @@
 				"ms-vscode.vscode-speech-language-pack-es-mx"
 			],
 			"settings": {
-				"accessibility.voice.speechLanguage": "es-MX"
+				"accessibility.voice.speechLanguage": "es-MX",
+				"[terraform]": {
+                    "editor.tabSize": 2
+                }
 			}
 		}
 	},
 	"mounts": [
 		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
-        "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached"
+        "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.config/gh,target=/home/vscode/.config/gh,type=bind,consistency=cached"
     ]
 }
