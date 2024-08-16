@@ -1,11 +1,11 @@
 resource "aws_alb" "app" {
-  name            = "alb-${var.app_name}"
+  name            = local.alb_name
   subnets         = aws_subnet.public.*.id
   security_groups = [aws_security_group.alb.id]
 }
 
 resource "aws_alb_target_group" "ecs_task" {
-  name        = "tg-${var.app_name}"
+  name        = local.tg_name
   port        = var.app_port
   protocol    = "HTTP"
   vpc_id      = aws_vpc.app.id

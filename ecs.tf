@@ -1,35 +1,51 @@
+resource "aws_ecr_repository" "app" {
+  name                 = local.ecr_name
+  image_tag_mutability = "MUTABLE"
+  force_delete         = true
+
+  image_scanning_configuration {
+    scan_on_push = false
+  }
+}
+
 resource "aws_ecs_cluster" "app" {
-  name = "fargate-${var.app_name}"
+  name = local.cluster_name
 }
 
 data "template_file" "app" {
-  template = file("templates/ecs-app.json.tpl")
+  template = file("${path.module}/templates/ecs-app.json.tpl")
 
   vars = {
-    app_name       = var.app_name
-    app_image      = var.app_image
-    app_port       = var.app_port
-    fargate_cpu    = var.fargate_cpu
-    fargate_memory = var.fargate_memory
-    aws_region     = var.region
+    name   = var.app_name
+    image  = aws_ecr_repository.app.repository_url
+    port   = var.app_port
+    cpu    = var.fargate_cpu
+    memory = var.fargate_memory
   }
 }
 
 resource "aws_ecs_task_definition" "app" {
-  family                   = "task-${var.app_name}"
+  family                   = local.task_name
+  execution_role_arn       = aws_iam_role.app.arn
+  task_role_arn            = aws_iam_role.app.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.fargate_cpu
   memory                   = var.fargate_memory
   container_definitions    = data.template_file.app.rendered
+
+  lifecycle {
+    ignore_changes = [container_definitions]
+  }
 }
 
 resource "aws_ecs_service" "app" {
-  name            = "service-${var.app_name}"
-  cluster         = aws_ecs_cluster.app.id
-  task_definition = aws_ecs_task_definition.app.arn
-  desired_count   = var.app_count
-  launch_type     = "FARGATE"
+  name                   = local.service_name
+  cluster                = aws_ecs_cluster.app.id
+  task_definition        = aws_ecs_task_definition.app.arn
+  desired_count          = var.app_count
+  launch_type            = "FARGATE"
+  enable_execute_command = true
 
   network_configuration {
     subnets          = aws_subnet.public[*].id

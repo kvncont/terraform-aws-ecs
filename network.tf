@@ -8,10 +8,10 @@ resource "aws_vpc" "app" {
 }
 
 resource "aws_subnet" "public" {
-  count                   = var.az_count
-  vpc_id                  = aws_vpc.app.id
-  cidr_block              = cidrsubnet(aws_vpc.app.cidr_block, 8, count.index)
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  count             = var.az_count
+  vpc_id            = aws_vpc.app.id
+  cidr_block        = cidrsubnet(aws_vpc.app.cidr_block, 8, count.index)
+  availability_zone = data.aws_availability_zones.available.names[count.index]
   # map_public_ip_on_launch = true
   tags = {
     Name = "snet-public-${var.app_name}-${count.index}"

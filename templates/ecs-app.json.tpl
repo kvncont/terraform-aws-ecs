@@ -1,16 +1,25 @@
 [
   {
-    "name": "${app_name}",
-    "image": "${app_image}",
-    "cpu": ${fargate_cpu},
-    "memory": ${fargate_memory},
+    "name": "${name}",
+    "image": "${image}",
+    "cpu": ${cpu},
+    "memory": ${memory},
     "essential": true,
     "portMappings": [
       {
-        "containerPort": ${app_port},
-        "hostPort": ${app_port},
+        "containerPort": ${port},
+        "hostPort": ${port},
         "protocol": "tcp"
       }
-    ]
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-create-group": "true",
+        "awslogs-group": "ecs/${name}",
+        "awslogs-region": "us-east-1",
+        "awslogs-stream-prefix": "api"
+      }
+    }
   }
 ]
