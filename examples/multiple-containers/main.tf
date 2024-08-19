@@ -20,8 +20,8 @@ module "app" {
   gh_repo_environment   = "production"
   container_definitions = [
     {
-      name   = local.app_name
-      image  = "nginx:latest" # Should be the ECR image URL
+      name  = local.app_name
+      image = "nginx:latest" # Should be the ECR image URL
       portMappings = [
         {
           containerPort = 80
