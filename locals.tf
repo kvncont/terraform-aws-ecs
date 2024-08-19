@@ -1,7 +1,8 @@
 locals {
-  iam_role_name          = "${replace(title(var.app_name), "-", "")}Role"
-  app_policy_name        = "${replace(title(var.app_name), "-", "")}AppPolicy"
-  ecs_deploy_policy_name = "${replace(title(var.app_name), "-", "")}ECSDeployPolicy"
+  execution_role         = "${replace(title(var.app_name), "-", "")}ExecutionRole"
+  execution_policy       = "${replace(title(var.app_name), "-", "")}ExecutionPolicy"
+  task_role              = "${replace(title(var.app_name), "-", "")}TaskRole"
+  task_policy            = "${replace(title(var.app_name), "-", "")}TaskPolicy"
   ecr_name               = "ecr-${var.app_name}"
   cluster_name           = "fargate-${var.app_name}"
   service_name           = "service-${var.app_name}"

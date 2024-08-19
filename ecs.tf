@@ -12,27 +12,15 @@ resource "aws_ecs_cluster" "app" {
   name = local.cluster_name
 }
 
-data "template_file" "app" {
-  template = file("${path.module}/templates/ecs-app.json.tpl")
-
-  vars = {
-    name   = var.app_name
-    image  = aws_ecr_repository.app.repository_url
-    port   = var.app_port
-    cpu    = var.fargate_cpu
-    memory = var.fargate_memory
-  }
-}
-
 resource "aws_ecs_task_definition" "app" {
   family                   = local.task_name
-  execution_role_arn       = aws_iam_role.app.arn
-  task_role_arn            = aws_iam_role.app.arn
+  execution_role_arn       = aws_iam_role.app_execution.arn
+  task_role_arn            = aws_iam_role.app_task.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.fargate_cpu
   memory                   = var.fargate_memory
-  container_definitions    = data.template_file.app.rendered
+  container_definitions    = jsonencode(var.container_definitions)
 
   lifecycle {
     ignore_changes = [container_definitions]
@@ -56,6 +44,6 @@ resource "aws_ecs_service" "app" {
   load_balancer {
     target_group_arn = aws_alb_target_group.ecs_task.arn
     container_name   = var.app_name
-    container_port   = var.app_port
+    container_port   = var.container_definitions[0].portMappings[0].containerPort
   }
 }

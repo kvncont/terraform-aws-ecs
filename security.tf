@@ -36,8 +36,8 @@ resource "aws_security_group" "ecs" {
 
   ingress {
     protocol        = "tcp"
-    from_port       = var.app_port
-    to_port         = var.app_port
+    from_port       = var.container_definitions[0].portMappings[0].hostPort
+    to_port         = var.container_definitions[0].portMappings[0].hostPort
     security_groups = [aws_security_group.alb.id]
   }
 

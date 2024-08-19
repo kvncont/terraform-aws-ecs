@@ -6,7 +6,7 @@ resource "aws_alb" "app" {
 
 resource "aws_alb_target_group" "ecs_task" {
   name        = local.tg_name
-  port        = var.app_port
+  port        = var.container_definitions[0].portMappings[0].hostPort
   protocol    = "HTTP"
   vpc_id      = aws_vpc.app.id
   target_type = "ip"

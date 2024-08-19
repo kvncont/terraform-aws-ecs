@@ -38,11 +38,6 @@ variable "app_name" {
   }
 }
 
-variable "app_port" {
-  description = "The port on which the application will run"
-  type        = number
-}
-
 variable "app_count" {
   description = "The number of tasks to run"
   type        = number
@@ -65,6 +60,50 @@ variable "fargate_memory" {
   description = "The amount of memory to allocate for the Fargate task"
   type        = number
   default     = 1024
+}
+
+variable "container_definitions" {
+  description = "The container definitions for the task"
+  type = list(object({
+    name   = optional(string)
+    image  = optional(string, "nginx:latest")
+    cpu    = optional(number, 256)
+    memory = optional(number, 512)
+    portMappings = optional(list(object({
+      containerPort = number
+      hostPort      = number
+      protocol      = optional(string, "tcp")
+      })), [
+      {
+        containerPort = 80
+        hostPort      = 80
+        protocol      = "tcp"
+      }
+    ])
+    essential = optional(bool, true)
+    environment = optional(list(object({
+      name  = string
+      value = string
+    })), [])
+    mountPoints = optional(list(object({
+      sourceVolume  = string
+      containerPath = string
+      readOnly      = bool
+    })), [])
+    volumesFrom = optional(list(object({
+      sourceContainer = string
+      readOnly        = bool
+    })), [])
+    logConfiguration = optional(object({
+      logDriver = string
+      options   = map(string)
+    }))
+    systemControls = optional(list(object({
+      namespace = string
+      value     = string
+    })), [])
+  }))
+  default = [{}]
 }
 
 variable "gh_repo" {
