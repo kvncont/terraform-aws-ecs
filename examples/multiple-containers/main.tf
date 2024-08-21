@@ -1,7 +1,3 @@
-data "local_file" "container_definitions" {
-  filename = "${path.module}/templates/container-definitions.json"
-}
-
 locals {
   app_name = "ms-family-budget"
   gh_repo  = "kvncont/${local.app_name}"
@@ -15,7 +11,6 @@ module "app" {
   assume_role_arn       = var.assume_role_arn
   vpc_cidr_block        = "10.0.0.0/16"
   app_name              = local.app_name
-  app_port              = 80
   gh_repo               = local.gh_repo
   gh_repo_environment   = "production"
   container_definitions = [

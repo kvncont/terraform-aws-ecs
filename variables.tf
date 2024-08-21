@@ -65,7 +65,7 @@ variable "fargate_memory" {
 variable "container_definitions" {
   description = "The container definitions for the task"
   type = list(object({
-    name   = optional(string)
+    name   = string
     image  = optional(string, "nginx:latest")
     cpu    = optional(number, 256)
     memory = optional(number, 512)
@@ -103,7 +103,6 @@ variable "container_definitions" {
       value     = string
     })), [])
   }))
-  default = [{}]
 }
 
 variable "gh_repo" {
